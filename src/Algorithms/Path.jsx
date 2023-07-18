@@ -346,6 +346,9 @@ const Path = () => {
       </button>
       <button onClick={() => visualizeAlgorithm("bfs")}>Visualize BFS</button>
       <button onClick={() => visualizeAlgorithm("dfs")}>Visualize DFS</button>
+
+      <button onClick={() => initializeGrid()}>Reset</button>
+
       <div className="grid">
         {grid.map((row, rowIndex) => {
           return (
