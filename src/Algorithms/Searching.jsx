@@ -6,18 +6,16 @@ function Searching() {
   const [target, setTarget] = useState('');
   const [searching, setSearching] = useState(false);
 
-  // Generate a new sorted array
- // Generate a new sorted array with random values
-const generateArray = () => {
+  // Generate a new sorted array with random values
+  const generateArray = () => {
     const newArray = [];
-    for (let i = 1; i <= 50; i++) {
+    for (let i = 1; i <= 40; i++) {
       newArray.push(Math.floor(Math.random() * 100) + 1);
     }
     newArray.sort((a, b) => a - b);
     setArray(newArray);
     setTarget('');
   };
-  
 
   // Handle target value input change
   const handleTargetChange = (event) => {
@@ -39,11 +37,11 @@ const generateArray = () => {
       for (let i = 0; i < arrayBars.length; i++) {
         const barStyle = arrayBars[i].style;
         if (i === low || i === high) {
-          barStyle.backgroundColor = 'yellow';
+          barStyle.backgroundColor = 'rgb(252, 119, 3)';
         } else if (i === mid) {
           barStyle.backgroundColor = 'purple';
         } else {
-          barStyle.backgroundColor = 'blue';
+          barStyle.backgroundColor = 'rgb(71, 64, 205)';
         }
       }
 
@@ -66,8 +64,50 @@ const generateArray = () => {
     const arrayBars = document.getElementsByClassName('array-bar');
 
     if (found) {
-      alert(`Target found at index ${low}!`);
       arrayBars[low].style.backgroundColor = 'green';
+    } else {
+      alert('Target not found!');
+    }
+
+    setSearching(false);
+  };
+
+  // Linear search algorithm
+  const linearSearch = async () => {
+    setSearching(true);
+    let found = false;
+
+    for (let i = 0; i < array.length; i++) {
+      const currentValue = array[i];
+
+      const arrayBars = document.getElementsByClassName('array-bar');
+      for (let j = 0; j < arrayBars.length; j++) {
+        const barStyle = arrayBars[j].style;
+        if (j === i) {
+          barStyle.backgroundColor = 'purple';
+        } else {
+          barStyle.backgroundColor = 'blue';
+        }
+      }
+
+      await new Promise((resolve) =>
+        setTimeout(() => {
+          resolve();
+        }, 500)
+      );
+
+      if (currentValue === target) {
+        found = true;
+        break;
+      }
+    }
+
+    const arrayBars = document.getElementsByClassName('array-bar');
+
+    if (found) {
+      const targetIndex = array.indexOf(target);
+      alert(`Target found at index ${targetIndex}!`);
+      arrayBars[targetIndex].style.backgroundColor = 'green';
     } else {
       alert('Target not found!');
     }
@@ -78,13 +118,13 @@ const generateArray = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Binary Search Algorithm Visualizer</h1>
+        <h1>Search Algorithm Visualizer</h1>
         <div className="array-container">
           {array.map((value, idx) => (
             <div
               className={`array-bar ${value === target ? 'target' : ''}`}
               key={idx}
-              style={{ height: `${value}px` }}
+              style={{ height: `${value*3}px`, color:"aqua"}}
             >{value}</div>
           ))}
         </div>
@@ -98,7 +138,10 @@ const generateArray = () => {
             disabled={searching}
           />
           <button onClick={binarySearch} disabled={searching}>
-            Search
+            Binary Search
+          </button>
+          <button onClick={linearSearch} disabled={searching}>
+            Linear Search
           </button>
         </div>
         <div className="button-container">

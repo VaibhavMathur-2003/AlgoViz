@@ -1,19 +1,52 @@
-import React from 'react'
-
-import Searching from './Algorithms/Searching'
-import Djkistra from './Algorithms/Djkistra'
-import Sorting from './Algorithms/Sorting'
-import PathSearch from './Algorithms/PathSearch'
+import React, { useState } from 'react';
+import Searching from "./Algorithms/Searching"
+import Sorting from "./Algorithms/Sorting"
+import Path from "./Algorithms/Path"
+import './App.css';
 
 const App = () => {
-  return (
-    <div>
-      <Djkistra/>
-      <PathSearch/>
-      <Sorting/>
-      <Searching/>
-    </div>
-  )
-}
+  const [activeOption, setActiveOption] = useState('searching');
 
-export default App
+  const renderComponent = () => {
+    switch (activeOption) {
+      case 'searching':
+        return <Searching />;
+      case 'sorting':
+        return <Sorting/>;
+      case 'pathfinder':
+        return <Path />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="app">
+      <h1 className="app-header">Algo Viz</h1>
+      <div className="options">
+        <button
+          className={`option ${activeOption === 'searching' ? 'active' : ''}`}
+          onClick={() => setActiveOption('searching')}
+        >
+          Searching
+        </button>
+        
+        <button
+          className={`option ${activeOption === 'sorting' ? 'active' : ''}`}
+          onClick={() => setActiveOption('sorting')}
+        >
+          Sorting
+        </button>
+        <button
+          className={`option ${activeOption === 'pathfinder' ? 'active' : ''}`}
+          onClick={() => setActiveOption('pathfinder')}
+        >
+          PathFinder
+        </button>
+      </div>
+      <div className="component-container">{renderComponent()}</div>
+    </div>
+  );
+};
+
+export default App;
