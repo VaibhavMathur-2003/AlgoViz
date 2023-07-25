@@ -5,7 +5,7 @@ import Path from "./Algorithms/Path"
 import './App.css';
 
 const App = () => {
-  const [activeOption, setActiveOption] = useState('searching');
+  const [activeOption, setActiveOption] = useState('pathfinder');
 
   const renderComponent = () => {
     switch (activeOption) {
@@ -24,6 +24,13 @@ const App = () => {
     <div className="app">
       <h1 className="app-header">Algo Viz</h1>
       <div className="options">
+      <button
+          className={`option ${activeOption === 'pathfinder' ? 'active' : ''}`}
+          onClick={() => setActiveOption('pathfinder')}
+        >
+          PathFinder
+        </button>
+
         <button
           className={`option ${activeOption === 'searching' ? 'active' : ''}`}
           onClick={() => setActiveOption('searching')}
@@ -36,12 +43,6 @@ const App = () => {
           onClick={() => setActiveOption('sorting')}
         >
           Sorting
-        </button>
-        <button
-          className={`option ${activeOption === 'pathfinder' ? 'active' : ''}`}
-          onClick={() => setActiveOption('pathfinder')}
-        >
-          PathFinder
         </button>
       </div>
       <div className="component-container">{renderComponent()}</div>

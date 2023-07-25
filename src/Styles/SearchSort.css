@@ -50,3 +50,11 @@
     margin-top: 20px;
   }
   
+  @media screen and (max-width: 885px) {
+    .array-bar{
+      width: 15px;
+    }
+  }
+ 
+  
+  

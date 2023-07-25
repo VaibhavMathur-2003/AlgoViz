@@ -4,11 +4,15 @@ import "../Styles/SearchSort.css"
 function Sorting() {
   const [array, setArray] = useState([]);
   const [sorting, setSorting] = useState(false);
+  var size = 25;
 
+  if(window.innerWidth <= 650){
+    size = 18;
+  }
   // Generate a new random array
   const generateArray = () => {
     const newArray = [];
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < size; i++) {
       newArray.push(Math.floor(Math.random() * 500) + 5);
     }
     setArray(newArray);

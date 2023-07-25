@@ -1,8 +1,7 @@
 html, body {
-  margin: 0;
-  padding: 0;
   background: linear-gradient(to bottom right, #D8B5FF, #1EAE98);
   text-align: center;
+  width: 100vw;
 }
 
 /* .pathfinding{

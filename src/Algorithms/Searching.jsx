@@ -5,11 +5,19 @@ function Searching() {
   const [array, setArray] = useState([]);
   const [target, setTarget] = useState('');
   const [searching, setSearching] = useState(false);
+  var size = 40;
+
+  if(window.innerWidth <= 700){
+    size = 30;
+  }
+  if(window.innerWidth <= 540){
+    size = 17;
+  }
 
   // Generate a new sorted array with random values
   const generateArray = () => {
     const newArray = [];
-    for (let i = 1; i <= 40; i++) {
+    for (let i = 1; i <= size; i++) {
       newArray.push(Math.floor(Math.random() * 100) + 1);
     }
     newArray.sort((a, b) => a - b);

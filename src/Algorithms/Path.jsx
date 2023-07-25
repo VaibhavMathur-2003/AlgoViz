@@ -46,6 +46,9 @@ const Path = () => {
     initializeGrid();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  
+
+
   const initializeGrid = () => {
     const grid = [];
     for (let row = 0; row < ROWS; row++) {
@@ -305,6 +308,28 @@ const Path = () => {
       }, 50 * i);
     }
   };
+  const reset =()=>{
+          // eslint-disable-next-line no-restricted-globals
+          location.reload()
+  }
+  const setInput = ()=>{
+    for (let i = 0; i <= 14; i++) {
+      for (let j = 0; j <= 44; j++) {
+        const element = document.getElementById(`node-${i}-${j}`);
+        element.className = "node";
+        
+    }
+  }
+    const element = document.getElementById(`node-${startRow}-${startCol}`);
+      if(element){
+        element.className = "node node-start"
+      }
+    const element2 = document.getElementById(`node-${endRow}-${endCol}`);
+      if(element2){
+        element2.className = "node node-finish"
+      }
+      
+  }
 
   return (
     <div className="pathfinding">
@@ -316,13 +341,13 @@ const Path = () => {
             placeholder="Start Row"
             type="number"
             value={startRow}
-            onChange={(e) => setStartRow(e.target.value)}
+            onChange={(e) => {setStartRow(e.target.value)}}
           />
           <input
             placeholder="Start Column"
             type="number"
             value={startCol}
-            onChange={(e) => setStartCol(e.target.value)}
+            onChange={(e) => {setStartCol(e.target.value)}}
           />
         </div>
         <div className="nodeEnd">
@@ -331,15 +356,16 @@ const Path = () => {
             placeholder="End Row"
             type="number"
             value={endRow}
-            onChange={(e) => setendRow(e.target.value)}
+            onChange={(e) => {setendRow(e.target.value) }}
           />
           <input
             placeholder="End Column"
             type="number"
             value={endCol}
-            onChange={(e) => setendCol(e.target.value)}
+            onChange={(e) => {setendCol(e.target.value)}}
           />
         </div>
+        <button onClick={setInput}> Change Start/End </button>
       </div>
       <button onClick={visualizeDijkstra}>
         Visualize Dijkstra's Algorithm
@@ -347,7 +373,7 @@ const Path = () => {
       <button onClick={() => visualizeAlgorithm("bfs")}>Visualize BFS</button>
       <button onClick={() => visualizeAlgorithm("dfs")}>Visualize DFS</button>
 
-      <button onClick={() => initializeGrid()}>Reset</button>
+      <button onClick={()=>reset()}>Reset</button>
 
       <div className="grid">
         {grid.map((row, rowIndex) => {
