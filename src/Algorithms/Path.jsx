@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../Styles/Path.css";
+import bfs from "../Algos/bfs.js";
+import dfs from "../Algos/dfs";
+import dijkstra from "../Algos/dijkstra";
+import aStar from "../Algos/astar";
 
 const ROWS = 15;
 const COLS = 45;
@@ -109,27 +113,6 @@ const Path = () => {
     animateDijkstra(visitedNodesInOrder, shortestPath);
   };
 
-  const dijkstra = (grid, startNode, finishNode) => {
-    const visitedNodesInOrder = [];
-    startNode.distance = 0;
-    const unvisitedNodes = getAllNodes(grid);
-
-    while (unvisitedNodes.length) {
-      sortNodesByDistance(unvisitedNodes);
-      const closestNode = unvisitedNodes.shift();
-
-      if (closestNode.isWall) continue;
-
-      if (closestNode.distance === Infinity) return visitedNodesInOrder;
-
-      closestNode.isVisited = true;
-      visitedNodesInOrder.push(closestNode);
-
-      if (closestNode === finishNode) return visitedNodesInOrder;
-
-      updateUnvisitedNeighbors(closestNode, grid);
-    }
-  };
   const visualizeAlgorithm = (algorithm) => {
     const startNode = grid[startRow][startCol];
     const finishNode = grid[endRow][endCol];
@@ -150,75 +133,6 @@ const Path = () => {
     const shortestPath = getShortestPath(finishNode);
     animateAlgorithm(visitedNodesInOrder, shortestPath);
   };
-  const getNeighbors = (node, grid) => {
-    const { col, row } = node;
-    const neighbors = [];
-    if (row > 0) neighbors.push(grid[row - 1][col]);
-    if (row < ROWS - 1) neighbors.push(grid[row + 1][col]);
-    if (col > 0) neighbors.push(grid[row][col - 1]);
-    if (col < COLS - 1) neighbors.push(grid[row][col + 1]);
-    return neighbors;
-  };
-
-  const bfs = (grid, startNode, finishNode) => {
-    const visitedNodesInOrder = [];
-    const queue = [];
-    queue.push(startNode);
-    startNode.isVisited = true;
-
-    while (queue.length) {
-      const currentNode = queue.shift();
-      visitedNodesInOrder.push(currentNode);
-
-      if (currentNode === finishNode) {
-        return visitedNodesInOrder;
-      }
-
-      const neighbors = getNeighbors(currentNode, grid);
-      for (const neighbor of neighbors) {
-        if (!neighbor.isVisited && !neighbor.isWall) {
-          queue.push(neighbor);
-          neighbor.isVisited = true;
-          neighbor.previousNode = currentNode;
-        }
-      }
-    }
-
-    return visitedNodesInOrder;
-  };
-
-  const dfs = (grid, startNode, finishNode) => {
-    const visitedNodesInOrder = [];
-    dfsUtil(startNode, visitedNodesInOrder, grid, finishNode);
-    return visitedNodesInOrder;
-  };
-
-  const dfsUtil = (currentNode, visitedNodesInOrder, grid, finishNode) => {
-    visitedNodesInOrder.push(currentNode);
-    currentNode.isVisited = true;
-
-    if (currentNode === finishNode) {
-      return true;
-    }
-
-    const neighbors = getNeighbors(currentNode, grid);
-    for (const neighbor of neighbors) {
-      if (!neighbor.isVisited && !neighbor.isWall) {
-        neighbor.previousNode = currentNode;
-        const reachedFinish = dfsUtil(
-          neighbor,
-          visitedNodesInOrder,
-          grid,
-          finishNode
-        );
-        if (reachedFinish) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  };
   const animateAlgorithm = (visitedNodesInOrder, shortestPath) => {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
@@ -237,37 +151,6 @@ const Path = () => {
     }
   };
 
-  const sortNodesByDistance = (unvisitedNodes) => {
-    unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
-  };
-
-  const getAllNodes = (grid) => {
-    const nodes = [];
-    for (const row of grid) {
-      for (const node of row) {
-        nodes.push(node);
-      }
-    }
-    return nodes;
-  };
-
-  const updateUnvisitedNeighbors = (node, grid) => {
-    const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
-    for (const neighbor of unvisitedNeighbors) {
-      neighbor.distance = node.distance + 1;
-      neighbor.previousNode = node;
-    }
-  };
-
-  const getUnvisitedNeighbors = (node, grid) => {
-    const neighbors = [];
-    const { col, row } = node;
-    if (row > 0) neighbors.push(grid[row - 1][col]);
-    if (row < ROWS - 1) neighbors.push(grid[row + 1][col]);
-    if (col > 0) neighbors.push(grid[row][col - 1]);
-    if (col < COLS - 1) neighbors.push(grid[row][col + 1]);
-    return neighbors.filter((neighbor) => !neighbor.isVisited);
-  };
 
   const getShortestPath = (finishNode) => {
     const shortestPath = [];
@@ -308,29 +191,85 @@ const Path = () => {
       }, 50 * i);
     }
   };
+  const visualizeAStar = () => {
+    const startNode = grid[startRow][startCol];
+    const finishNode = grid[endRow][endCol];
+
+    // Reset the grid properties before each visualization
+    setInput();
+
+    // Calculate heuristic for each node in the grid
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLS; col++) {
+        const node = grid[row][col];
+        node.distance = Infinity;
+        node.isVisited = false;
+        node.previousNode = null;
+        node.heuristic = calculateHeuristic(node, finishNode);
+      }
+    }
+
+    const visitedNodesInOrder = aStar(grid, startNode, finishNode);
+    const shortestPath = getShortestPath(finishNode);
+    animateAlgorithm(visitedNodesInOrder, shortestPath);
+  };
+  const calculateHeuristic = (node, finishNode) => {
+    return Math.abs(node.row - finishNode.row) + Math.abs(node.col - finishNode.col);
+  };
+  
   const reset =()=>{
           // eslint-disable-next-line no-restricted-globals
           location.reload()
   }
-  const setInput = ()=>{
-    for (let i = 0; i <= 14; i++) {
-      for (let j = 0; j <= 44; j++) {
-        const element = document.getElementById(`node-${i}-${j}`);
-        element.className = "node";
-        
+  const setstartRow = (newValue) => {
+    const intValue = parseInt(newValue, 10);
+    if (!isNaN(intValue) && intValue >= 0 && intValue < ROWS) {
+      setStartRow(intValue);
     }
-  }
-    const element = document.getElementById(`node-${startRow}-${startCol}`);
-      if(element){
-        element.className = "node node-start"
+  };
+  
+  const setstartCol = (newValue) => {
+    const intValue = parseInt(newValue, 10);
+    if (!isNaN(intValue) && intValue >= 0 && intValue < COLS) {
+      setStartCol(intValue);
+    }
+  };
+  
+  const setEndRow = (newValue) => {
+    const intValue = parseInt(newValue, 10);
+    if (!isNaN(intValue) && intValue >= 0 && intValue < ROWS) {
+      setendRow(intValue);
+    }
+  };
+  
+  const setEndCol = (newValue) => {
+    const intValue = parseInt(newValue, 10);
+    if (!isNaN(intValue) && intValue >= 0 && intValue < COLS) {
+      setendCol(intValue);
+    }
+  };
+  
+  const setInput = () => {
+    // Reset the class names for start and end nodes
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        const element = document.getElementById(`node-${i}-${j}`);
+        if (element) {
+          if (i === startRow && j === startCol) {
+            element.className = "node node-start";
+          } else if (i === endRow && j === endCol) {
+            element.className = "node node-finish";
+          } else {
+            // Skip setting class for walls
+            if (!grid[i][j].isWall) {
+              element.className = "node";
+            }
+          }
+        }
       }
-    const element2 = document.getElementById(`node-${endRow}-${endCol}`);
-      if(element2){
-        element2.className = "node node-finish"
-      }
-      
-  }
-
+    }
+  };
+  
   return (
     <div className="pathfinding">
       <h1 className="path">Path</h1>
@@ -341,13 +280,13 @@ const Path = () => {
             placeholder="Start Row"
             type="number"
             value={startRow}
-            onChange={(e) => {setStartRow(e.target.value)}}
+            onChange={(e) => {setstartRow(e.target.value); setInput()}}
           />
           <input
             placeholder="Start Column"
             type="number"
             value={startCol}
-            onChange={(e) => {setStartCol(e.target.value)}}
+            onChange={(e) => {setstartCol(e.target.value); setInput()}}
           />
         </div>
         <div className="nodeEnd">
@@ -356,23 +295,22 @@ const Path = () => {
             placeholder="End Row"
             type="number"
             value={endRow}
-            onChange={(e) => {setendRow(e.target.value) }}
+            onChange={(e) => {setEndRow(e.target.value); setInput() }}
           />
           <input
             placeholder="End Column"
             type="number"
             value={endCol}
-            onChange={(e) => {setendCol(e.target.value)}}
+            onChange={(e) => {setEndCol(e.target.value); setInput()}}
           />
         </div>
-        <button onClick={setInput}> Change Start/End </button>
       </div>
       <button onClick={visualizeDijkstra}>
         Visualize Dijkstra's Algorithm
       </button>
       <button onClick={() => visualizeAlgorithm("bfs")}>Visualize BFS</button>
       <button onClick={() => visualizeAlgorithm("dfs")}>Visualize DFS</button>
-
+      <button onClick={() => visualizeAStar()}>Visualize A*</button>
       <button onClick={()=>reset()}>Reset</button>
 
       <div className="grid">
