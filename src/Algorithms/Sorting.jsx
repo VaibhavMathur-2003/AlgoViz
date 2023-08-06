@@ -4,6 +4,7 @@ import "../Styles/SearchSort.css"
 function Sorting() {
   const [array, setArray] = useState([]);
   const [sorting, setSorting] = useState(false);
+  const [isgenerated, setisgenerated] = useState(false);
   var size = 25;
 
   if(window.innerWidth <= 650){
@@ -16,6 +17,8 @@ function Sorting() {
       newArray.push(Math.floor(Math.random() * 500) + 5);
     }
     setArray(newArray);
+    setisgenerated(true);
+    setSorting(false);
   };
 
   // Bubble Sort algorithm
@@ -43,7 +46,6 @@ function Sorting() {
       arrayBars[array.length - i - 1].style.backgroundColor = 'green';
     }
     arrayBars[0].style.backgroundColor = 'green';
-    setSorting(false);
   };
 
   // Selection Sort algorithm
@@ -76,7 +78,6 @@ function Sorting() {
       arrayBars[i].style.backgroundColor = 'green';
     }
     arrayBars[array.length - 1].style.backgroundColor = 'green';
-    setSorting(false);
   };
 
   // Insertion Sort algorithm
@@ -106,7 +107,6 @@ function Sorting() {
     for (let i = 0; i < array.length; i++) {
       arrayBars[i].style.backgroundColor = 'green';
     }
-    setSorting(false);
   };
 
   // Quick Sort algorithm
@@ -157,7 +157,6 @@ function Sorting() {
   const runQuickSort = async () => {
     setSorting(true);
     await quickSort(0, array.length - 1);
-    setSorting(false);
   };
 
   return (
@@ -173,10 +172,11 @@ function Sorting() {
             ></div>
           ))}
         </div>
-        <div className="button-container">
-          <button onClick={generateArray} disabled={sorting}>
+        <button style={{backgroundColor:"blue"}} onClick={generateArray} >
             Generate New Array
           </button>
+        {isgenerated && !sorting && <div className="button-container">
+          
           <button onClick={bubbleSort} disabled={sorting}>
             Bubble Sort
           </button>
@@ -190,6 +190,7 @@ function Sorting() {
             Quick Sort
           </button>
         </div>
+}
       </header>
     </div>
   );

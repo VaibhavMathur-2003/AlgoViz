@@ -3,7 +3,8 @@ import "../Styles/Path.css";
 import bfs from "../Algos/bfs.js";
 import dfs from "../Algos/dfs";
 import dijkstra from "../Algos/dijkstra";
-import aStar from "../Algos/astar";
+import aStar from "../Algos/astar"
+
 
 const ROWS = 15;
 const COLS = 45;
@@ -108,6 +109,14 @@ const Path = () => {
   const visualizeDijkstra = () => {
     const startNode = grid[startRow][startCol];
     const finishNode = grid[endRow][endCol];
+    setInput()
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLS; col++) {
+        const node = grid[row][col];
+        node.isVisited = false;
+        node.previousNode = null;
+      }
+    }
     const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
     const shortestPath = getShortestPath(finishNode);
     animateDijkstra(visitedNodesInOrder, shortestPath);
@@ -116,6 +125,14 @@ const Path = () => {
   const visualizeAlgorithm = (algorithm) => {
     const startNode = grid[startRow][startCol];
     const finishNode = grid[endRow][endCol];
+    setInput()
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLS; col++) {
+        const node = grid[row][col];
+        node.isVisited = false;
+        node.previousNode = null;
+      }
+    }
 
     let visitedNodesInOrder = [];
 
@@ -218,8 +235,16 @@ const Path = () => {
   };
   
   const reset =()=>{
-          // eslint-disable-next-line no-restricted-globals
-          location.reload()
+    
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLS; col++) {
+        const node = grid[row][col];
+        node.isVisited = false;
+        node.isWall = false;
+        node.previousNode = null;
+      }
+    }
+    setInput()
   }
   const setstartRow = (newValue) => {
     const intValue = parseInt(newValue, 10);
@@ -278,13 +303,15 @@ const Path = () => {
           <label htmlFor=""> Start: </label>
           <input
             placeholder="Start Row"
-            type="number"
+            type="range"
+            min="0" max="15"
             value={startRow}
             onChange={(e) => {setstartRow(e.target.value); setInput()}}
           />
           <input
             placeholder="Start Column"
-            type="number"
+            type="range"
+            min="0" max="45"
             value={startCol}
             onChange={(e) => {setstartCol(e.target.value); setInput()}}
           />
@@ -293,13 +320,15 @@ const Path = () => {
           <label htmlFor="">End: </label>
           <input
             placeholder="End Row"
-            type="number"
+            type="range"
+            min="0" max="15"
             value={endRow}
             onChange={(e) => {setEndRow(e.target.value); setInput() }}
           />
           <input
             placeholder="End Column"
-            type="number"
+            type="range"
+            min="0" max="45"
             value={endCol}
             onChange={(e) => {setEndCol(e.target.value); setInput()}}
           />
