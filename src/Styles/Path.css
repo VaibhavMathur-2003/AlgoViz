@@ -4,15 +4,6 @@ html, body {
   /* width: 98.8vw; */
 }
 
-/* .pathfinding{
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(to bottom right, #4e54c8, #f4f5f9);
-  text-align: center;
-
-} */
-
 body {
   display: flex;
   justify-content: center;
