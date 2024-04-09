@@ -2,29 +2,67 @@ import React, { useState, useEffect } from "react";
 import "../Styles/Path.css";
 import dijkstra from "../Algos/dijkstra";
 import Node from "../Visuals/Node";
-import {getShortestPath, animateShortestPath} from "../Visuals/getShortestPath";
+import { getShortestPath, animateShortestPath } from "../Visuals/getShortestPath";
 import { setInput } from "../Visuals/handleInput";
 import visualizeAStar from "../Visuals/visualizeAStar";
 import visualizeAlgorithm from "../Visuals/visualizeAlgorithm";
 
 
-const ROWS = 15;
-const COLS = 45;
 
 const Path = () => {
   const [grid, setGrid] = useState([]);
   const [mousePress, setmousePress] = useState(false);
+  const [startRow, setStartRow] = useState(1);
+  const [startCol, setStartCol] = useState(3);
+  const [endRow, setendRow] = useState(4);
+  const [endCol, setendCol] = useState(13);
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
-  const [startRow, setStartRow] = useState(7);
-  const [startCol, setStartCol] = useState(5);
-  const [endRow, setendRow] = useState(7);
-  const [endCol, setendCol] = useState(35);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     initializeGrid();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewportWidth]);
+
+
+  const getRows = () => {
+    if (viewportWidth >= 1024) {
+      return 15;
+    } else if (viewportWidth >= 768) {
+      return 10;
+    } else if (viewportWidth >= 450) {
+      return 14;
+    } else {
+      return 10;
+    }
+  };
+
+  const getColumns = () => {
+    if (viewportWidth >= 1024) {
+      return 43;
+    } else if (viewportWidth >= 768) {
+      return 30;
+    } else if (viewportWidth >= 450) {
+      return 25;
+    } else {
+      return 17;
+    }
+  };
+  var ROWS = getRows();
+  var COLS = getColumns();
 
   const initializeGrid = () => {
+    ROWS = getRows();
+    COLS = getColumns();
     const grid = [];
     for (let row = 0; row < ROWS; row++) {
       const currentRow = [];
@@ -79,7 +117,7 @@ const Path = () => {
   const visualizeDijkstra = () => {
     const startNode = grid[startRow][startCol];
     const finishNode = grid[endRow][endCol];
-    setInput(grid, startRow, startCol, endRow, endCol)
+    setInput(grid, startRow, startCol, endRow, endCol, ROWS, COLS);
     for (let row = 0; row < ROWS; row++) {
       for (let col = 0; col < COLS; col++) {
         const node = grid[row][col];
@@ -87,11 +125,10 @@ const Path = () => {
         node.previousNode = null;
       }
     }
-    const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+    const visitedNodesInOrder = dijkstra(grid, startNode, finishNode, ROWS, COLS);
     const shortestPath = getShortestPath(finishNode);
     animateDijkstra(visitedNodesInOrder, shortestPath);
   };
-  
 
   const animateDijkstra = (visitedNodesInOrder, shortestPath) => {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
@@ -111,8 +148,7 @@ const Path = () => {
     }
   };
 
-  const reset =()=>{
-    
+  const reset = () => {
     for (let row = 0; row < ROWS; row++) {
       for (let col = 0; col < COLS; col++) {
         const node = grid[row][col];
@@ -121,8 +157,9 @@ const Path = () => {
         node.previousNode = null;
       }
     }
-    setInput(grid, startRow, startCol, endRow, endCol)
-  }
+    setInput(grid, startRow, startCol, endRow, endCol, ROWS, COLS);
+  };
+
   const setVal = (newValue, x, fn) => {
     const intValue = parseInt(newValue, 10);
     if (!isNaN(intValue) && intValue >= 0 && intValue < x) {
@@ -139,16 +176,24 @@ const Path = () => {
           <input
             placeholder="Start Row"
             type="range"
-            min="0" max="15"
+            min="0"
+            max="15"
             value={startRow}
-            onChange={(e) => {setVal(e.target.value, ROWS, setStartRow); setInput(grid, startRow, startCol, endRow, endCol)}}
+            onChange={(e) => {
+              setVal(e.target.value, ROWS, setStartRow);
+              setInput(grid, startRow, startCol, endRow, endCol, ROWS, COLS);
+            }}
           />
           <input
             placeholder="Start Column"
             type="range"
-            min="0" max="45"
+            min="0"
+            max="45"
             value={startCol}
-            onChange={(e) => {setVal(e.target.value, COLS, setStartCol); setInput(grid, startRow, startCol, endRow, endCol)}}
+            onChange={(e) => {
+              setVal(e.target.value, COLS, setStartCol);
+              setInput(grid, startRow, startCol, endRow, endCol, ROWS, COLS);
+            }}
           />
         </div>
         <div className="nodeEnd">
@@ -156,26 +201,32 @@ const Path = () => {
           <input
             placeholder="End Row"
             type="range"
-            min="0" max="15"
+            min="0"
+            max="15"
             value={endRow}
-            onChange={(e) => {setVal(e.target.value, ROWS, setendRow); setInput(grid, startRow, startCol, endRow, endCol) }}
+            onChange={(e) => {
+              setVal(e.target.value, ROWS, setendRow);
+              setInput(grid, startRow, startCol, endRow, endCol, ROWS, COLS);
+            }}
           />
           <input
             placeholder="End Column"
             type="range"
-            min="0" max="45"
+            min="0"
+            max="45"
             value={endCol}
-            onChange={(e) => {setVal(e.target.value, COLS, setendCol); setInput(grid, startRow, startCol, endRow, endCol)}}
+            onChange={(e) => {
+              setVal(e.target.value, COLS, setendCol);
+              setInput(grid, startRow, startCol, endRow, endCol, ROWS, COLS);
+            }}
           />
         </div>
       </div>
-      <button onClick={visualizeDijkstra}>
-        Visualize Dijkstra's
-      </button>
-      <button onClick={() => visualizeAlgorithm("bfs", grid, startRow, startCol, endRow, endCol)}>Visualize BFS</button>
-      <button onClick={() => visualizeAlgorithm("dfs", grid, startRow, startCol, endRow, endCol)}>Visualize DFS</button>
-      <button onClick={() => visualizeAStar(grid, startRow, startCol, endRow, endCol)}>Visualize A*</button>
-      <button onClick={()=>reset()}>Reset</button>
+      <button onClick={visualizeDijkstra}>Visualize Dijkstra's</button>
+      <button onClick={() => visualizeAlgorithm("bfs", grid, startRow, startCol, endRow, endCol, ROWS, COLS)}>Visualize BFS</button>
+      <button onClick={() => visualizeAlgorithm("dfs", grid, startRow, startCol, endRow, endCol, ROWS, COLS)}>Visualize DFS</button>
+      <button onClick={() => visualizeAStar(grid, startRow, startCol, endRow, endCol, ROWS, COLS)}>Visualize A*</button>
+      <button onClick={reset}>Reset</button>
 
       <div className="grid">
         {grid.map((row, rowIndex) => {

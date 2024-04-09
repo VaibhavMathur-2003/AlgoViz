@@ -4,13 +4,10 @@ import { animateAlgorithm, getShortestPath } from "./getShortestPath";
 import { setInput } from "./handleInput";
 
 
-const ROWS = 15;
-const COLS = 45;
-
-const visualizeAlgorithm = (algorithm, grid, startRow, startCol, endRow, endCol) => {
+const visualizeAlgorithm = (algorithm, grid, startRow, startCol, endRow, endCol, ROWS, COLS) => {
     const startNode = grid[startRow][startCol];
     const finishNode = grid[endRow][endCol];
-    setInput(grid, startRow, startCol, endRow, endCol)
+    setInput(grid, startRow, startCol, endRow, endCol, ROWS, COLS)
     for (let row = 0; row < ROWS; row++) {
       for (let col = 0; col < COLS; col++) {
         const node = grid[row][col];
@@ -23,10 +20,10 @@ const visualizeAlgorithm = (algorithm, grid, startRow, startCol, endRow, endCol)
 
     switch (algorithm) {
       case "bfs":
-        visitedNodesInOrder = bfs(grid, startNode, finishNode);
+        visitedNodesInOrder = bfs(grid, startNode, finishNode, ROWS, COLS);
         break;
       case "dfs":
-        visitedNodesInOrder = dfs(grid, startNode, finishNode);
+        visitedNodesInOrder = dfs(grid, startNode, finishNode, ROWS, COLS);
         break;
       default:
         break;

@@ -1,7 +1,4 @@
-const ROWS = 15;
-const COLS = 45;
-
-const getNeighbors = (node, grid) => {
+const getNeighbors = (node, grid, ROWS, COLS) => {
     const { col, row } = node;
     const neighbors = [];
     if (row > 0) neighbors.push(grid[row - 1][col]);

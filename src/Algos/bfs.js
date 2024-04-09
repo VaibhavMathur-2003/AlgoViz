@@ -1,5 +1,5 @@
 import getNeighbors from "./getNeighbors";
-const bfs = (grid, startNode, finishNode) => {
+const bfs = (grid, startNode, finishNode, ROWS, COLS) => {
     const visitedNodesInOrder = [];
     const queue = [];
     queue.push(startNode);
@@ -13,7 +13,7 @@ const bfs = (grid, startNode, finishNode) => {
         return visitedNodesInOrder;
       }
 
-      const neighbors = getNeighbors(currentNode, grid);
+      const neighbors = getNeighbors(currentNode, grid, ROWS, COLS);
       for (const neighbor of neighbors) {
         if (!neighbor.isVisited && !neighbor.isWall) {
           queue.push(neighbor);

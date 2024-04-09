@@ -2,20 +2,29 @@ html, body {
   background: linear-gradient(to bottom right, #D8B5FF, #1EAE98);
   text-align: center;
   /* width: 98.8vw; */
+ 
 }
 
 body {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .node {
-  width: 25px;
-  height: 25px;
+  width: 22px;
+  height: 22px;
   outline: 1px solid rgb(175, 216, 248);
   display: inline-block;
   background-color: #fff;
+}
+@media (max-width: 768px) {
+  .node{
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .node-finish {

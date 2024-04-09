@@ -2,15 +2,11 @@ import aStar from "../Algos/astar";
 import { animateAlgorithm, getShortestPath } from "./getShortestPath";
 import { setInput } from "./handleInput";
 
-
-const ROWS = 15;
-const COLS = 45;
-
-const visualizeAStar = (grid, startRow, startCol, endRow, endCol) => {
+const visualizeAStar = (grid, startRow, startCol, endRow, endCol, ROWS, COLS) => {
     const startNode = grid[startRow][startCol];
     const finishNode = grid[endRow][endCol];
 
-    setInput(grid, startRow, startCol, endRow, endCol);
+    setInput(grid, startRow, startCol, endRow, endCol, ROWS, COLS);
 
     for (let row = 0; row < ROWS; row++) {
       for (let col = 0; col < COLS; col++) {
@@ -22,7 +18,7 @@ const visualizeAStar = (grid, startRow, startCol, endRow, endCol) => {
       }
     }
 
-    const visitedNodesInOrder = aStar(grid, startNode, finishNode);
+    const visitedNodesInOrder = aStar(grid, startNode, finishNode, ROWS, COLS);
     const shortestPath = getShortestPath(finishNode);
     animateAlgorithm(visitedNodesInOrder, shortestPath);
   };

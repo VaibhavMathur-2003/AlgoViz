@@ -1,8 +1,4 @@
-
-const ROWS = 15;
-const COLS = 45;
-
-const dijkstra = (grid, startNode, finishNode) => {
+const dijkstra = (grid, startNode, finishNode, ROWS, COLS) => {
     const visitedNodesInOrder = [];
     startNode.distance = 0;
     const unvisitedNodes = getAllNodes(grid);
@@ -20,7 +16,7 @@ const dijkstra = (grid, startNode, finishNode) => {
 
       if (closestNode === finishNode) return visitedNodesInOrder;
 
-      updateUnvisitedNeighbors(closestNode, grid);
+      updateUnvisitedNeighbors(closestNode, grid, ROWS, COLS);
     }
   };
 
@@ -36,15 +32,15 @@ const dijkstra = (grid, startNode, finishNode) => {
   const sortNodesByDistance = (unvisitedNodes) => {
     unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
   };
-  const updateUnvisitedNeighbors = (node, grid) => {
-    const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
+  const updateUnvisitedNeighbors = (node, grid, ROWS, COLS) => {
+    const unvisitedNeighbors = getUnvisitedNeighbors(node, grid, ROWS, COLS);
     for (const neighbor of unvisitedNeighbors) {
       neighbor.distance = node.distance + 1;
       neighbor.previousNode = node;
     }
   };
 
-  const getUnvisitedNeighbors = (node, grid) => {
+  const getUnvisitedNeighbors = (node, grid, ROWS, COLS) => {
     const neighbors = [];
     const { col, row } = node;
     if (row > 0) neighbors.push(grid[row - 1][col]);

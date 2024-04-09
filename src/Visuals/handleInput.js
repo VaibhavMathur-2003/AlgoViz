@@ -1,8 +1,4 @@
-const ROWS = 15;
-const COLS = 45;
-
-
-const setInput = (grid, startRow, startCol, endRow, endCol) => {
+const setInput = (grid, startRow, startCol, endRow, endCol, ROWS, COLS) => {
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
         const element = document.getElementById(`node-${i}-${j}`);

@@ -1,12 +1,12 @@
 import getNeighbors from "./getNeighbors";
 
-const dfs = (grid, startNode, finishNode) => {
+const dfs = (grid, startNode, finishNode, ROWS, COLS) => {
     const visitedNodesInOrder = [];
-    dfsUtil(startNode, visitedNodesInOrder, grid, finishNode);
+    dfsUtil(startNode, visitedNodesInOrder, grid, finishNode, ROWS, COLS);
     return visitedNodesInOrder;
   };
 
-  const dfsUtil = (currentNode, visitedNodesInOrder, grid, finishNode) => {
+  const dfsUtil = (currentNode, visitedNodesInOrder, grid, finishNode, ROWS, COLS) => {
     visitedNodesInOrder.push(currentNode);
     currentNode.isVisited = true;
 
@@ -14,7 +14,7 @@ const dfs = (grid, startNode, finishNode) => {
       return true;
     }
 
-    const neighbors = getNeighbors(currentNode, grid);
+    const neighbors = getNeighbors(currentNode, grid, ROWS, COLS);
     for (const neighbor of neighbors) {
       if (!neighbor.isVisited && !neighbor.isWall) {
         neighbor.previousNode = currentNode;
@@ -22,7 +22,9 @@ const dfs = (grid, startNode, finishNode) => {
           neighbor,
           visitedNodesInOrder,
           grid,
-          finishNode
+          finishNode,
+          ROWS,
+          COLS
         );
         if (reachedFinish) {
           return true;

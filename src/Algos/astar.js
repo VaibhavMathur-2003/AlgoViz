@@ -1,6 +1,6 @@
 import getNeighbors from "./getNeighbors";
 
-const aStar = (grid, startNode, finishNode) => {
+const aStar = (grid, startNode, finishNode, ROWS, COLS) => {
     const openSet = [startNode];
     const visitedNodesInOrder = [];
     startNode.distance = 0;
@@ -17,7 +17,7 @@ const aStar = (grid, startNode, finishNode) => {
         currentNode.isVisited = true;
         visitedNodesInOrder.push(currentNode);
 
-        const neighbors = getNeighbors(currentNode, grid);
+        const neighbors = getNeighbors(currentNode, grid, ROWS, COLS);
         for (const neighbor of neighbors) {
           if (neighbor.isWall) continue; // Skip walls
           const tentativeDistance = currentNode.distance + 1;
